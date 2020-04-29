@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "394695364902",
+    "firebase_url": "https://location-mapper-275718.firebaseio.com",
+    "project_id": "location-mapper-275718",
+    "storage_bucket": "location-mapper-275718.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394695364902:android:41eb62b1292fceb802b1e7",
+        "android_client_info": {
+          "package_name": "com.example.locationmapper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394695364902-a7qdvgrh280ruts68vbaq03hbtrih4gh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu8R-9KnwJ1TZ20M3AXXEB-oJ16y_Mq-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394695364902-a7qdvgrh280ruts68vbaq03hbtrih4gh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
