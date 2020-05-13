@@ -30,12 +30,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
-
     private LocationListener locationListener;
     private LocationManager locationManager;
 
-    private final long MIN_TIME = 3000;        //time to update location = 3 seconds
-    private final long MIN_DISTANCE = 1;    //1 meter displacement
+    private final long MIN_TIME = 3000;        //update location in every  3 seconds
+    private final long MIN_DISTANCE = 1;    // 1 meter displacement
 
     Polyline polyline = null;
     private ArrayList<LatLng> locationTrail;
@@ -51,21 +50,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
     }
 
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
@@ -79,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         polyline = googleMap.addPolyline(polylineOptions);
         polyline.setWidth(10f);
 
-        Log.d("DEBUG", "MAP READY");
+        Log.d("DEBUG", "MAP IS READY");
 
         locationListener = new LocationListener() {
             @Override
@@ -138,19 +128,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, locationListener);
 
 
-            Log.d("DEBUG", "first");
-
-            // first marker
+            // adding the marker
             Location loc = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
             LatLng updated = new LatLng(loc.getLatitude(), loc.getLongitude());
 
             // adding new updated location
             locationTrail.add(updated);
 
-            //adding marker
+            // getting timestamp of user
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String timeStamp  = dateFormat.format(new Date());
 
+            // adding marker to map
             mMap.addMarker(new MarkerOptions().position(updated).title("Timestamp: " + timeStamp));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(updated,24.0f));
 
@@ -165,11 +154,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    // gps alert method
+
     private void showGPSDisabledAlertToUser(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("GPS is disabled in your device please enable it.")
+        alertDialogBuilder.setMessage("Please enable device GPS.")
                 .setCancelable(false)
-                .setPositiveButton("Goto Settings Page To Enable GPS",
+                .setPositiveButton("Enable Gps",
                         new DialogInterface.OnClickListener(){
                             public void onClick(DialogInterface dialog, int id){
                                 Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -187,4 +178,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
     }
+
+
 }

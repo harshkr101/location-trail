@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,15 +34,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG ="ERROR" ;
     Button mgetotpButton, mloginButton, mloginSkipButton;
-     EditText mphoneEditText, mOtpEditText;
-//    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    EditText mphoneEditText, mOtpEditText;
     private FirebaseAuth mAuth;
-   String mVerificationId;
+    String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
- //   String phoneNumber;
     private String codeSent;
-
-    private final int LOCATION_PERMISSION_REQUESTCODE = 999;
 
     private LocationManager locationManager;
 
@@ -67,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         mloginSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(v.getContext(),MapsActivity.class);
+                Intent intent=new Intent(v.getContext(),DeviceFinderActivity.class);
                 startActivity(intent);
             }
         });
@@ -97,38 +92,35 @@ public class MainActivity extends AppCompatActivity {
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+        assert locationManager != null;
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             Toast.makeText(this, "GPS is Enabled in your device", Toast.LENGTH_SHORT).show();
         }else{
             // GPS not enabled
             Toast.makeText(this, "GPS is not enabled in your device", Toast.LENGTH_SHORT).show();
-            showGPSDisabledAlertToUser();
+            gpsAlert();
         }
     }
 
 
 
-    private boolean isValidNumber(String phone) {
-
-        return android.util.Patterns.PHONE.matcher(phone).matches();
-
-    }
 
     private  void getPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
+            int LOCATION_PERMISSION_REQUESTCODE = 999;
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUESTCODE);
         }
     }
 
 
-    private void showGPSDisabledAlertToUser(){
+    private void gpsAlert(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("GPS is disabled in your device please enable it.")
                 .setCancelable(false)
-                .setPositiveButton("Goto Settings Page To Enable GPS",
+                .setPositiveButton("Enable GPS",
                         new DialogInterface.OnClickListener(){
                             public void onClick(DialogInterface dialog, int id){
                                 Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -217,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
                             //verification unsuccessful.. display an error message
 
-                            String message = "Somthing is wrong, we will fix it soon...";
+                            String message = "Something is wrong, we will fix it soon...";
 
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 message = "Invalid code entered...";
